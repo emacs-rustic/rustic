@@ -341,7 +341,7 @@ rust-mode:
   (setq rust-mode-treesitter-derive t))
 ```
 
-And make to have rustic load after rust-mode:
+And then make sure to have rustic load after rust-mode:
 
 ``` emacs-lisp
 (use-package rustic
