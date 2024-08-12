@@ -112,7 +112,7 @@
     (kill-buffer buf)))
 
 (ert-deftest rustic-test-clippy-fix ()
-  (let* ((string "fn main() { let s = 1;}")
+  (let* ((string "fn main() { let s = vec![1].first();}")
          (buf (rustic-test-count-error-helper-new string))
          (default-directory (file-name-directory (buffer-file-name buf))))
     (with-current-buffer buf
@@ -121,6 +121,6 @@
              (buffer (process-buffer proc)))
         (rustic-test--wait-till-finished rustic-clippy-buffer-name)
         (revert-buffer t t)
-        (should (string= (buffer-string) "#![allow(non_snake_case)]\nfn main() { let _s = 1;}"))))))
+        (should (string= (buffer-string) "#![allow(non_snake_case)]\nfn main() { let s = [1].first();}"))))))
 
 (provide 'rustic-clippy-test)
