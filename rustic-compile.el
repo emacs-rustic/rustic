@@ -153,11 +153,11 @@
   "Create hyperlink in compilation buffers for file paths preceded by ':::'.")
 
 (defvar rustic-compilation-panic
-  (let ((panic "thread '[^']+' panicked at '[^']+', ")
+  (let ((panic "thread '[^']+' panicked at ")
         (file "\\([^\n]+\\)")
         (start-line "\\([0-9]+\\)")
         (start-col  "\\([0-9]+\\)"))
-    (let ((re (concat panic file ":" start-line ":" start-col)))
+    (let ((re (concat panic file ":" start-line ":" start-col ":")))
       (cons re '(1 2 3))))
   "Match thread panics.")
 

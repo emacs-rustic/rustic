@@ -16,6 +16,18 @@
       (with-current-buffer (get-buffer rustic-compilation-buffer-name)
         (should (= compilation-num-errors-found 1))))))
 
+(ert-deftest rustic-test-count-panics ()
+  (kill-buffer (get-buffer rustic-compilation-buffer-name))
+  (let* ((string "fn main() {
+                       panic!(\"oops!\");
+                    }")
+         (default-directory (rustic-test-count-error-helper string))
+         (rustic-format-trigger nil))
+    (let ((proc (rustic-compilation-start (split-string "cargo run"))))
+      (rustic-test--wait-till-finished (process-buffer proc))
+      (with-current-buffer (get-buffer rustic-compilation-buffer-name)
+        (should (= compilation-num-errors-found 1))))))
+
 (ert-deftest rustic-test-cargo-test-compilation ()
   ;; NOTE: this doesn't seem to be the case anymore
   ;; compilation-num-errors-found would be 8 with regular compilation mode
@@ -71,7 +83,7 @@
            (proc (rustic-cargo-test)))
       (rustic-test--wait-till-finished rustic-test-buffer-name)
       (with-current-buffer (get-buffer rustic-test-buffer-name)
-        (should (= compilation-num-errors-found 0)))
+        (should (= compilation-num-errors-found 10)))
       (kill-buffer rustic-test-buffer-name))))
 
 (ert-deftest rustic-test-count-warnings ()
