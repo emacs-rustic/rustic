@@ -161,11 +161,11 @@ installing
 
 ### straight
 
-[straight.el](https://github.com/raxod502/straight.el#install-packages)
-clones each of your packages directly from its source. There are good
-additional [installation
-instructions](https://github.crookster.org/switching-to-straight.el-from-emacs-26-builtin-package.el/)
-for moving your package management from package.el to straight.
+```emacs-lisp
+(straight-use-package '(rustic
+                        :repo "emacs-rustic/rustic"
+                        :fetcher github))
+```
 
 ## remote
 
@@ -347,6 +347,17 @@ And make to have rustic load after rust-mode:
 (use-package rustic
   :ensure t
   :after (rust-mode))
+```
+
+Alternatively, using straight without use-package:
+
+``` emacs-lisp
+(straight-use-package 'rust-mode)
+(setq rust-mode-treesitter-derive t)
+
+(straight-use-package 'rustic)
+(with-eval-after-load 'rust-mode
+  (require 'rustic nil t))
 ```
 
 ## LSP
