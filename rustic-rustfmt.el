@@ -206,10 +206,12 @@ and it's `cdr' is a list of arguments."
     (let ((proc-buffer (process-buffer proc)))
       (with-current-buffer proc-buffer
         (if (string-match-p "^finished" output)
-            (and
-             (with-current-buffer next-error-last-buffer
-               (revert-buffer t t t))
-             (kill-buffer proc-buffer))
+            (progn
+              (with-current-buffer next-error-last-buffer
+                (revert-buffer t t t))
+              (-if-let (win (get-buffer-window proc-buffer))
+                  (quit-window t win)
+                (kill-buffer proc-buffer)))
           (sit-for 0.1)
           (with-current-buffer next-error-last-buffer
             (goto-char rustic-save-pos))
