@@ -162,9 +162,7 @@ installing
 ### straight
 
 ```emacs-lisp
-(straight-use-package '(rustic
-                        :repo "emacs-rustic/rustic"
-                        :fetcher github))
+(straight-use-package 'rustic)
 ```
 
 ## remote
