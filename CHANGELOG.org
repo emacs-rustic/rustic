@@ -1,4 +1,4 @@
-* Unreleased
+* v3.5
 
 - Revamp testing in CI: Use only cask.
 - Replace Makefile with justfile.
