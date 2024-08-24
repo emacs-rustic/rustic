@@ -46,7 +46,7 @@
         (write-file file2)
         (insert string))
       (rustic-save-some-buffers t)
-      (sit-for 1)
+      (rustic-test--wait-till-finished rustic-format-buffer-name)
       (with-current-buffer buffer1
         (should (string= (buffer-string) formatted-string)))
       (with-current-buffer buffer2

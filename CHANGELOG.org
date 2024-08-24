@@ -1,4 +1,8 @@
-* v3.5
+* Unreleased
+
+- Fix flaky ~rustic-test-save-some-buffers~ test.
+
+* 3.5
 
 - Revamp testing in CI: Use only cask.
 - Replace Makefile with justfile.
