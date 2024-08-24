@@ -111,3 +111,10 @@ list of substrings of `STR' each followed by its face."
   (let* ((proc (get-buffer-process buffer)))
     (while (not (eq (process-status proc) 'exit))
       (sit-for 0.2))))
+
+(defun rustic-test--maybe-wait-till-finished (buffer)
+  "Wait till the BUFFER has exited."
+  (let* ((proc (get-buffer-process buffer)))
+    (when proc
+      (while (not (eq (process-status proc) 'exit))
+      (sit-for 0.2)))))

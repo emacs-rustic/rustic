@@ -174,7 +174,7 @@ fn test1() {
       (forward-line 1)
       (let* ((proc (rustic-cargo-current-test))
              (proc-buf (process-buffer proc)))
-        (rustic-test--wait-till-finished rustic-test-buffer-name)
+        (rustic-test--maybe-wait-till-finished rustic-test-buffer-name)
         (with-current-buffer proc-buf
           (should (string-match "test1" (buffer-substring-no-properties (point-min) (point-max))))
           (should-not (string-match "test2" (buffer-substring-no-properties (point-min) (point-max)))))
