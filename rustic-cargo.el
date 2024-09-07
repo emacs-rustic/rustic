@@ -49,7 +49,7 @@
   :type 'string
   :group 'rustic-cargo)
 
-(defcustom rustic-populate-package-name t
+(defcustom rustic-cargo-populate-package-name nil
   "Populate package name automatically when used with universal argument."
   :type 'boolean
   :group 'rustic-cargo)
@@ -66,7 +66,7 @@
         (gethash default-directory rustic--package-names)))))
 
 (defun rustic-cargo-package-argument ()
-  (if rustic-populate-package-name
+  (if rustic-cargo-populate-package-name
       (let ((package-name (rustic-cargo-cached-package-name)))
         (when package-name
           (format "--package %s" package-name)))))
@@ -76,7 +76,7 @@
     (if buffer
         (kill-buffer buffer)))
   (let* ((buffer (get-buffer-create "*cargo-manifest*"))
-         (exit-code (call-process "cargo" nil buffer nil "read-manifest")))
+         (exit-code (call-process (rustic-cargo-bin) nil buffer nil "read-manifest")))
     (if (eq exit-code 0)
         (with-current-buffer buffer
           (let ((json-parsed-data (json-read-from-string (buffer-string))))
@@ -220,7 +220,8 @@ If ARG is not nil, use value as argument and store it in
     (setq rustic-test-arguments
           (read-from-minibuffer "Cargo test arguments: "
                                 (rustic--populate-minibuffer
-                                 (list rustic-test-arguments
+                                 (list (rustic-cargo-package-argument)
+                                       rustic-test-arguments
                                        rustic-cargo-build-arguments
                                        rustic-default-test-arguments)))))
   (rustic-cargo-test-run rustic-test-arguments))

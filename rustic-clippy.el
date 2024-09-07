@@ -84,6 +84,7 @@ When calling this function from `rustic-popup-mode', always use the value of
                         (read-from-minibuffer "Cargo clippy arguments: "
                                               (rustic--populate-minibuffer
                                                (list
+                                                (rustic-cargo-package-argument)
                                                 rustic-clippy-arguments
                                                 rustic-cargo-build-arguments
                                                 rustic-default-clippy-arguments

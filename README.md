@@ -529,6 +529,7 @@ Customization:
 - `rustic-cargo-auto-add-missing-dependencies` automatically add missing dependencies
 to Cargo.toml by checking new diagnostics for 'unresolved import' errors
 - `rustic-cargo-use-last-stored-arguments` always use stored arguments that were provided with `C-u`(instead of requiring to run rustic "rerun" commands)
+- `rustic-cargo-populate-package-name` for auto populating the correct package name when used with universal argument. This comes in handy when you are working with multiple projects. Not enabled by default, but recommened to enable it.
 
 ### Edit
 
