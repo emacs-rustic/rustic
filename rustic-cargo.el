@@ -49,6 +49,40 @@
   :type 'string
   :group 'rustic-cargo)
 
+(defcustom rustic-cargo-populate-package-name nil
+  "Populate package name automatically when used with universal argument."
+  :type 'boolean
+  :group 'rustic-cargo)
+
+(defvar rustic--package-names (make-hash-table :test #'equal))
+
+(defun rustic-cargo-cached-package-name ()
+  (let ((package-name (gethash default-directory rustic--package-names)))
+    (if package-name
+        package-name
+      (progn
+        (let ((pkg-name (rustic-cargo-package-name)))
+          (setf (gethash default-directory rustic--package-names) pkg-name))
+        (gethash default-directory rustic--package-names)))))
+
+(defun rustic-cargo-package-argument ()
+  (if rustic-cargo-populate-package-name
+      (let ((package-name (rustic-cargo-cached-package-name)))
+        (when package-name
+          (format "--package %s" package-name)))))
+
+(defun rustic-cargo-package-name ()
+  (let ((buffer (get-buffer "*cargo-manifest*")))
+    (if buffer
+        (kill-buffer buffer)))
+  (let* ((buffer (get-buffer-create "*cargo-manifest*"))
+         (exit-code (call-process (rustic-cargo-bin) nil buffer nil "read-manifest")))
+    (if (eq exit-code 0)
+        (with-current-buffer buffer
+          (let ((json-parsed-data (json-read-from-string (buffer-string))))
+            (cdr (assoc 'name json-parsed-data))))
+      nil)))
+
 (defun rustic-cargo-bin ()
   (if (file-remote-p (or (buffer-file-name) ""))
       rustic-cargo-bin-remote
@@ -186,7 +220,8 @@ If ARG is not nil, use value as argument and store it in
     (setq rustic-test-arguments
           (read-from-minibuffer "Cargo test arguments: "
                                 (rustic--populate-minibuffer
-                                 (list rustic-test-arguments
+                                 (list (rustic-cargo-package-argument)
+                                       rustic-test-arguments
                                        rustic-cargo-build-arguments
                                        rustic-default-test-arguments)))))
   (rustic-cargo-test-run rustic-test-arguments))
@@ -685,7 +720,7 @@ in your project like `pwd'"
   (interactive "P")
   (when arg
     (setq rustic-cargo-build-arguments
-          (read-string "Cargo build arguments: " (rustic--populate-minibuffer (list rustic-cargo-build-arguments)))))
+          (read-string "Cargo build arguments: " (rustic--populate-minibuffer (list (rustic-cargo-package-argument) rustic-cargo-build-arguments)))))
   (rustic-run-cargo-command `(,(rustic-cargo-bin)
                               ,rustic-cargo-build-exec-command
                               ,@(split-string rustic-cargo-build-arguments))

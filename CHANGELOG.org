@@ -1,4 +1,10 @@
-* v3.5
+* Unreleased
+
+- Implement ~rustic-cargo-populate-package-name~ customization
+  option. This is handy when you are working on multiple
+  projects. Refer the variable docs and README for more details.
+
+* 3.5
 
 - Revamp testing in CI: Use only cask.
 - Replace Makefile with justfile.
