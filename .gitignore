@@ -1,5 +1,7 @@
 *.elc
 /.cask
+/.eask
+/dist
 /config.mk
 *autoloads.el
 test/test-project/target

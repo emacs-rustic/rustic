@@ -2,13 +2,13 @@
 just:
 	just --list --unsorted
 
-# Install dependencies and build via cask
+# Install dependencies and build via eask
 build:
 	emacs --version
-	cask install
-	cask build
+	eask install-deps --dev
+	eask package
 
 # Test
 test:
-	cask emacs --batch -L . -L test -f batch-byte-compile $(cask files)
-	cask emacs --batch -L . -L test -l test/all-tests.el -f ert-run-tests-batch-and-exit
+	eask compile
+	eask emacs --batch -L . -L test -l test/all-tests.el -f ert-run-tests-batch-and-exit
