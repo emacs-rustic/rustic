@@ -43,7 +43,7 @@ jobs:
 
       - name: Install requirements
         run: |
-          echo "$HOME/.cask/bin" >> $GITHUB_PATH
+          echo "$HOME/.eask/bin" >> $GITHUB_PATH
           echo "$HOME/bin" >> $GITHUB_PATH
 
       - uses: dtolnay/rust-toolchain@master
