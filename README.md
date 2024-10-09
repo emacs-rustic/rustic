@@ -86,7 +86,7 @@ This package is based on [rust-mode](https://github.com/rust-lang/rust-mode) and
 - automatic LSP configuration with
   [eglot](https://github.com/joaotavora/eglot) or
   [lsp-mode](https://github.com/emacs-lsp/lsp-mode)
-- cask for testing
+- [eask][] for testing
 - etc.
 
 rustic only shares the rust-mode code from rust-mode.el and rust-utils.el.
@@ -999,10 +999,10 @@ There are also some additional commands:
 
 ## elisp tests
 
-To run the tests, you will need [Cask](https://github.com/cask/cask).
+To run the tests, you will need [Eask][].
 
 ``` bash
-cask emacs --batch -L . -L test -l test/all-tests.el -f ert-run-tests-batch-and-exit
+eask emacs --batch -L . -L test -l test/all-tests.el -f ert-run-tests-batch-and-exit
 ```
 
 alternatively you can use `just test`
@@ -1012,3 +1012,8 @@ alternatively you can use `just test`
 PRs, feature requests and bug reports are very welcome. If you want to
 add a new feature please open an issue in advance so we can discuss
 the details.
+
+
+<!-- Links -->
+
+[Eask]: https://github.com/emacs-eask/cli
