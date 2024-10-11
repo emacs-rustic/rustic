@@ -123,16 +123,16 @@ and it's `cdr' is a list of arguments."
      (--each files
        (unless (file-exists-p it)
          (error (format "File %s does not exist." it))))
-     (with-current-buffer err-buf
-       (let* ((c `(,rustfmt
-                   ,@(split-string rustic-rustfmt-args)
-                   ,@command "--" ,@files))
-              (proc (rustic-make-process :name rustic-format-process-name
-                                         :buffer err-buf
-                                         :command (remove "" c)
-                                         :filter #'rustic-compilation-filter
-                                         :sentinel sentinel
-                                         :file-handler t)))
+     (let* ((c `(,rustfmt
+                 ,@(split-string rustic-rustfmt-args)
+                 ,@command "--" ,@files))
+            (proc (rustic-make-process :name rustic-format-process-name
+                                       :buffer err-buf
+                                       :command (remove "" c)
+                                       :filter #'rustic-compilation-filter
+                                       :sentinel sentinel
+                                       :file-handler t)))
+       (with-current-buffer err-buf
          (setq next-error-last-buffer buffer)
          (when string
            (process-put proc 'command-buf cur-buf)
