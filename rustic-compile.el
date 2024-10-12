@@ -537,21 +537,19 @@ buffer."
 ;;; Interactive
 
 ;;;###autoload
-(defun rustic-compile (&optional arg)
-  "Compile rust project.
+(defun rustic-compile (command)
+  "Run COMMAND in the current Rust workspace root.
 
-If the variable `compilation-read-command' is non-nil or if
-`rustic-compile` is called with prefix argument ARG then read the
-command in the minibuffer.  Otherwise use
-`rustic-compile-command'.
-
-In either store the used command in `compilation-arguments'."
-  (interactive "P")
-  (rustic-set-compilation-arguments
-        (if (or compilation-read-command arg)
-            (compilation-read-command (or (car compilation-arguments)
-                                          (rustic-compile-command)))
-          (rustic-compile-command)))
+Interactively, prompts for the command if the variable
+`compilation-read-command' is non-nil; otherwise uses
+`rustic-compile-command'."
+  (interactive
+   (list
+    (if compilation-read-command
+        (compilation-read-command (or (car compilation-arguments)
+                                      (rustic-compile-command)))
+      (rustic-compile-command))))
+  (rustic-set-compilation-arguments command)
   (setq compilation-directory (funcall rustic-compile-directory-method))
   (rustic-compilation-process-live)
   (rustic-compilation-start (split-string (car compilation-arguments))
