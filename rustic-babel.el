@@ -361,6 +361,51 @@ executed with the parameter `:include'."
            (module (expand-file-name (format "%s.rs" b) src-dir)))
       (write-region contents nil module nil 0))))
 
+(defun rustic-babel-variable-to-type (var)
+  "Return a valid const type for the passed variable.
+
+Only supports three cases:
+
+1. Simple value: A='a' -> &str
+2. Simple list: A=('a' 'b') -> &[&str]
+3. Nested list (org-table): A=(('a' 'b')) -> &[&[&str]]"
+  (if (listp var)
+      (if (listp (car var)) "&[&[&str]]" "&[&str]")
+    "&str"))
+
+(defun rustic-babel-variable-to-rust (var)
+  "Return a valid rust assignment of an org VAR.
+
+This will convert a simple variable to a &str and list to nested
+list of strings. Tables will be converted to &[&[&str]] but need
+to be homogenous."
+  (if (listp var)
+      (if (listp (car var))
+          (concat "&[" (string-join (mapcar #'rustic-babel-variable-to-rust var) ",") "]")
+        (concat "&["
+                (string-join
+                 (mapcar (lambda (v) (format "\"%s\"" v)) var)
+                 ", ")
+                "]"))
+    (concat "\"" var "\"")))
+
+(defun rustic-babel-variable-assignments:rust (vars)
+  "Convert the passed org-src block VARS into a matching const type.
+
+There are only 3 cases:
+
+1. Simple value: A='a' -> &str
+2. Simple list: A=('a' 'b') -> &[&str]
+2. Nested list (org-table): A=(('a' 'b')) -> &[&[&str]]"
+  (string-join
+   (mapcar
+    (lambda (pair)
+      (let ((key (car pair))
+            (value (cdr pair)))
+        (format "const %s: %s = %s;\n" key (rustic-babel-variable-to-type value) (rustic-babel-variable-to-rust value))))
+    (org-babel--get-vars vars))
+   "\n"))
+
 (defun org-babel-execute:rustic (body params)
   "Execute a block of Rust code with org-babel.
 
@@ -376,6 +421,7 @@ kill the running process."
              (dir (setq rustic-babel-dir (expand-file-name project)))
              (main-p (cdr (assq :main params)))
              (main (expand-file-name "main.rs" (concat dir "/src")))
+             (vars (cdr (assq :var params)))
              (wrap-main (cond ((string= main-p "yes") t)
                               ((string= main-p "no") nil)
                               (t rustic-babel-auto-wrap-main)))
@@ -399,7 +445,8 @@ kill the running process."
            (concat "#![allow(non_snake_case, unused)]\n"
                    (if use-blocks (rustic-babel-insert-mod use-blocks) "")
                    (if include-blocks (rustic-babel-include-blocks include-blocks) "")
-                   (if wrap-main (rustic-babel-ensure-main-wrap body) body))
+                   (if wrap-main (rustic-babel-ensure-main-wrap body) body)
+                   (if (not (eq vars nil)) (rustic-babel-variable-assignments:rust params) ""))
            nil main nil 0)
           (rustic-babel-eval dir toolchain main-p)
           (setq rustic-babel-src-location
