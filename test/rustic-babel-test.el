@@ -271,4 +271,28 @@
       (rustic-test-babel-execute-block buf)
       (should (eq (rustic-test-babel-check-results buf) nil)))))
 
+(ert-deftest rustic-test-babel-block-with-simple-var ()
+  (let* ((string "println!(\"{}\", A)")
+         (params ":main yes :var A=\"A\"")
+         (buf (rustic-test-get-babel-block string params)))
+    (with-current-buffer buf
+      (rustic-test-babel-execute-block buf)
+      (should (string-equal (rustic-test-babel-check-results buf) "A\n")))))
+
+(ert-deftest rustic-test-babel-block-with-list-var ()
+  (let* ((string "println!(\"{:?}\", A)")
+         (params ":main yes :var A='(\"A\" \"B\")")
+         (buf (rustic-test-get-babel-block string params)))
+    (with-current-buffer buf
+      (rustic-test-babel-execute-block buf)
+      (should (string-equal (rustic-test-babel-check-results buf) "[\"A\", \"B\"]\n")))))
+
+(ert-deftest rustic-test-babel-block-with-nested-list-var ()
+  (let* ((string "println!(\"{:?}\", A)")
+         (params ":main yes :var A='((\"A\" \"B\") (\"C\" \"D\"))")
+         (buf (rustic-test-get-babel-block string params)))
+    (with-current-buffer buf
+      (rustic-test-babel-execute-block buf)
+      (should (string-equal (rustic-test-babel-check-results buf) "[[\"A\", \"B\"], [\"C\", \"D\"]]\n")))))
+
 (provide 'rustic-babel-test)
