@@ -551,14 +551,13 @@ If you want to disable warnings when running cargo-test commands, you can set
 
 Commands:
 
-`rustic-cargo-nextest-exec-command` command for running [nextest](https://github.com/nextest-rs/nextest)
-`rustic-cargo-test` run 'cargo test', when called with `C-u` store
-arguments in `rustic-test-arguments`
-
-`rustic-cargo-test-rerun` rerun 'cargo test' with arguments stored in
-`rustic-test-arguments`
-
-`rustic-cargo-current-test` run test at point, whether it's a function or a module
+- `rustic-cargo-test` run 'cargo test', when called with `C-u` store
+  arguments in `rustic-test-arguments`
+- `rustic-cargo-test-rerun` rerun 'cargo test' with arguments stored
+  in `rustic-test-arguments`
+- `rustic-cargo-current-test` run test at point, whether it's a
+  function or a module
+- `rustic-cargo-run-nextest` command for running [nextest](https://github.com/nextest-rs/nextest)
 
 ![](https://raw.githubusercontent.com/emacs-rustic/rustic/main/img/cargo_current_test.png)
 
