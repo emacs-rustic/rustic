@@ -184,7 +184,9 @@ stored in this variable.")
     (setq-local rustic-compile-rustflags (concat rustic-compile-rustflags " -Awarnings"))))
 
 (defun rustic-cargo-run-nextest (&optional arg)
-  "Command for running nextest."
+  "Command for running nextest.
+
+If ARG is not nil, get input from minibuffer."
   (interactive "P")
   (let* ((nextest (if arg
                       (read-from-minibuffer "nextest command: " rustic-cargo-nextest-exec-command)
@@ -194,6 +196,17 @@ stored in this variable.")
          (proc rustic-test-process-name)
          (mode 'rustic-cargo-test-mode))
     (rustic-compilation c (list :buffer buf :process proc :mode mode))))
+
+(defun rustic-cargo-nextest-current-test ()
+  "Run 'cargo nextest run' for the test near point."
+  (interactive)
+  (rustic-compilation-process-live)
+  (-if-let (test-to-run (setq rustic-test-arguments
+                              (rustic-cargo--get-test-target)))
+      (let ((rustic-cargo-nextest-exec-command
+             (format "%s %s" rustic-cargo-nextest-exec-command test-to-run)))
+        (rustic-cargo-run-nextest))
+    (message "Could not find test at point.")))
 
 ;;;###autoload
 (defun rustic-cargo-test-run (&optional test-args)

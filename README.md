@@ -558,6 +558,8 @@ Commands:
 - `rustic-cargo-current-test` run test at point, whether it's a
   function or a module
 - `rustic-cargo-run-nextest` command for running [nextest](https://github.com/nextest-rs/nextest)
+- `rustic-cargo-nextest-current-test` is the nextest equivalent for
+  `rustic-cargo-current-test`
 
 ![](https://raw.githubusercontent.com/emacs-rustic/rustic/main/img/cargo_current_test.png)
 
