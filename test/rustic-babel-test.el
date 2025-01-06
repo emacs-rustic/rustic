@@ -295,4 +295,22 @@
       (rustic-test-babel-execute-block buf)
       (should (string-equal (rustic-test-babel-check-results buf) "[[\"A\", \"B\"], [\"C\", \"D\"]]\n")))))
 
+(ert-deftest rustic-test-babel-block-with-paths ()
+  (let* ((current-test-dir (or (and load-file-name (file-name-directory load-file-name))
+                               (and buffer-file-name (file-name-directory buffer-file-name))
+                               default-directory)) ; Fallback to `default-directory`
+         (string "use foo;
+                  use bar;
+                  fn main() {
+                      foo::foo();
+                      bar::bar();
+                  }")
+         (params (format ":paths '((foo \"%s/test-project/crates/foo\") (bar \"%s/test-project/crates/bar\")) :crates '((foo . 0.0.1) (bar . 0.0.1))"
+                         (expand-file-name "test" current-test-dir) (expand-file-name "test" current-test-dir)))
+         (buf (rustic-test-get-babel-block string params)))
+    (with-current-buffer buf
+      (rustic-test-babel-execute-block buf)
+      (should (eq (rustic-test-babel-check-results buf) nil)))))
+
+
 (provide 'rustic-babel-test)
