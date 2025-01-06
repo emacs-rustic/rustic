@@ -15,4 +15,4 @@ test:
 
 test-one TEST_NAME:
 	eask compile
-	eask emacs --batch -L . -L test -l test/rustic-babel-test.el -eval '(ert-run-tests-batch-and-exit "{{TEST_NAME}}")'
+	eask emacs --batch -L . -L test -l test/all-tests.el -eval '(ert-run-tests-batch-and-exit "{{TEST_NAME}}")'
