@@ -445,7 +445,7 @@ fn test() {
           (should (eq major-mode 'rustic-cargo-test-mode)))
         (should (string= (s-join " " (process-get proc 'command))
                          (s-trim (concat (rustic-cargo-bin) " test "
-                                    rustic-test-arguments))))))))
+                                    rustic-default-test-arguments))))))))
 
 (ert-deftest rustic-cargo-expand-test ()
   (let* ((string "fn main() {()}")
