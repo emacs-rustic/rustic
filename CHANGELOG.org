@@ -6,6 +6,7 @@
 - Replace Cask with Eask for CI testing.
 - Implement ~rustic-cargo-nextest-current-test~ for running test at a
   point using nextest.
+- Fixed an issue where workspaces were not resolved correctly over TRAMP.
 
 * 3.5
 

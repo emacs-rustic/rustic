@@ -89,17 +89,20 @@ as for that macro."
   ;; this variable is buffer local so we can use the cached value
   (if rustic--buffer-workspace
       rustic--buffer-workspace
-    (rustic--with-temp-process-buffer
-      (let ((ret (process-file (rustic-cargo-bin) nil (list (current-buffer) nil) nil "locate-project" "--workspace")))
-        (cond ((and (/= ret 0) nodefault)
-               (error "`cargo locate-project' returned %s status: %s" ret (buffer-string)))
-              ((and (/= ret 0) (not nodefault))
-               (setq rustic--buffer-workspace default-directory))
-              (t
-               (goto-char 0)
-               (let* ((output (json-read))
-                      (dir (file-name-directory (cdr (assoc-string "root" output)))))
-                 (setq rustic--buffer-workspace dir))))))))
+    ;; Resolve the bin path while still buffer local (in cases like
+    ;; remote via TRAMP)
+    (let ((cargo-bin (rustic-cargo-bin)))
+      (rustic--with-temp-process-buffer
+        (let ((ret (process-file cargo-bin nil (list (current-buffer) nil) nil "locate-project" "--workspace")))
+          (cond ((and (/= ret 0) nodefault)
+                 (error "`cargo locate-project' returned %s status: %s" ret (buffer-string)))
+                ((and (/= ret 0) (not nodefault))
+                 (setq rustic--buffer-workspace default-directory))
+                (t
+                 (goto-char 0)
+                 (let* ((output (json-read))
+                        (dir (file-name-directory (cdr (assoc-string "root" output)))))
+                   (setq rustic--buffer-workspace dir)))))))))
 
 (defun rustic-buffer-crate (&optional nodefault)
   "Return the crate for the current buffer.
