@@ -565,10 +565,11 @@ It's a list that looks like (list command mode name-function highlight-regexp)."
   (setq compilation-arguments (list command nil nil nil)))
 
 ;;;###autoload
-(defun rustic-recompile ()
+(defun rustic-recompile (arg)
   "Re-compile the program using `compilation-arguments'."
-  (interactive)
-  (let* ((command (or (car compilation-arguments) (format "%s %s" (rustic-compile-command) rustic-cargo-build-arguments)))
+  (interactive "P")
+  (let* ((comp-arguments (or (car compilation-arguments) (format "%s %s" (rustic-compile-command) rustic-cargo-build-arguments)))
+         (command (if arg (read-from-minibuffer "recompile: " comp-arguments) comp-arguments))
          (dir compilation-directory))
     (rustic-compilation-process-live)
     (rustic-compilation-start (split-string command)

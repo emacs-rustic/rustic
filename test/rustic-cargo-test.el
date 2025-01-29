@@ -352,7 +352,7 @@ fn test2() {
              (proc-buf (process-buffer proc)))
         (while (eq (process-status proc) 'run)
           (sit-for 0.1)))
-      (let* ((proc (rustic-cargo-test-rerun))
+      (let* ((proc (rustic-cargo-test-rerun nil))
              (proc-buf (process-buffer proc)))
         (while (eq (process-status proc) 'run)
           (sit-for 0.1))

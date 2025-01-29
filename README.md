@@ -560,6 +560,8 @@ Commands:
 - `rustic-cargo-run-nextest` command for running [nextest](https://github.com/nextest-rs/nextest)
 - `rustic-cargo-nextest-current-test` is the nextest equivalent for
   `rustic-cargo-current-test`
+- `rustic-cargo-test-rerun-current` re-run the test at point from the
+  `*cargo-test*` compile buffer. (bound to `C-c C-t`)
 
 ![](https://raw.githubusercontent.com/emacs-rustic/rustic/main/img/cargo_current_test.png)
 

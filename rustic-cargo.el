@@ -170,10 +170,14 @@ Currently only working with lsp-mode."
 Tests that are executed by `rustic-cargo-current-test' will also be
 stored in this variable.")
 
+(defvar rustic-test-history nil
+  "Holds previous arguments for 'cargo test', similar to `compile-arguments`.")
+
 (defvar rustic-cargo-test-mode-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map rustic-compilation-mode-map)
     (define-key map [remap recompile] 'rustic-cargo-test-rerun)
+    (define-key map (kbd "C-c C-t") 'rustic-cargo-test-rerun-current)
     map)
   "Local keymap for `rustic-cargo-test-mode' buffers.")
 
@@ -237,7 +241,8 @@ If ARG is not nil, use value as argument and store it in
                                        (list (rustic-cargo-package-argument)
                                              rustic-test-arguments
                                              rustic-cargo-build-arguments
-                                             rustic-default-test-arguments)))))
+                                             rustic-default-test-arguments))
+                                      nil nil 'rustic-test-history)))
          (rustic-cargo-use-last-stored-arguments
           (if (> (length rustic-test-arguments) 0)
               rustic-test-arguments
@@ -246,11 +251,35 @@ If ARG is not nil, use value as argument and store it in
           rustic-default-test-arguments))))
 
 ;;;###autoload
-(defun rustic-cargo-test-rerun ()
+(defun rustic-cargo-test-rerun (arg)
   "Run 'cargo test' with `rustic-test-arguments'."
-  (interactive)
+  (interactive "P")
   (let ((default-directory (or rustic-compilation-directory default-directory)))
+    (setq rustic-test-arguments
+          (if arg
+              (read-from-minibuffer "Cargo test arguments: " rustic-test-arguments nil nil 'rustic-test-history)
+            rustic-test-arguments))
     (rustic-cargo-test-run rustic-test-arguments)))
+
+(defun rustic-cargo-test-rerun-current (arg)
+  "Rerun the test at point from `rustic-cargo-test-mode'."
+  (interactive "P")
+  (let* ((default-directory (or rustic-compilation-directory default-directory))
+        (test (rustic-cargo--get-test-at-point))
+        (command (if test
+                     (concat "-- --exact " test)
+                   (error "No test found at point"))))
+    (setq rustic-test-arguments
+          (if arg
+              (read-from-minibuffer "Cargo test arguments: " command nil nil 'rustic-test-history)
+            command))
+    (rustic-cargo-test-run rustic-test-arguments)))
+
+(defun rustic-cargo--get-test-at-point ()
+  (save-excursion
+      (beginning-of-line)
+      (when (re-search-forward "^test \\([^ ]+\\) ..." (line-end-position) t)
+        (buffer-substring-no-properties (match-beginning 1) (match-end 1)))))
 
 ;;;###autoload
 (defun rustic-cargo-current-test ()
@@ -259,7 +288,10 @@ If ARG is not nil, use value as argument and store it in
   (rustic-compilation-process-live)
   (-if-let (test-to-run (setq rustic-test-arguments
                               (rustic-cargo--get-test-target)))
-      (rustic-cargo-run-test test-to-run)
+      (progn
+        (unless (equal (car rustic-test-history) test-to-run)
+          (push test-to-run rustic-test-history))
+        (rustic-cargo-run-test test-to-run))
     (message "Could not find test at point.")))
 
 (defun rustic-cargo-run-test (test)
@@ -645,6 +677,9 @@ If BIN is not nil, create a binary application, otherwise a library."
 (defvar rustic-run-arguments ""
   "Holds arguments for 'cargo run', similar to `compilation-arguments`.")
 
+(defvar rustic-run-history nil
+  "Holds previous arguments for 'cargo run', similar to `compile-history`.")
+
 (defvar rustic-cargo-run-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map [remap recompile] 'rustic-cargo-run-rerun)
@@ -676,17 +711,24 @@ When calling this function from `rustic-popup-mode', always use the value of
   (interactive "P")
   (rustic-cargo-run-command
    (cond (arg
-          (setq rustic-run-arguments (read-from-minibuffer "Cargo run arguments: " rustic-run-arguments)))
+          (setq rustic-run-arguments
+                (read-from-minibuffer "Cargo run arguments: "
+                                      rustic-run-arguments nil nil 'rustic-run-history)))
          (rustic-cargo-use-last-stored-arguments
           rustic-run-arguments)
          ((rustic--get-run-arguments))
          (t rustic-run-arguments))))
 
 ;;;###autoload
-(defun rustic-cargo-run-rerun ()
+(defun rustic-cargo-run-rerun (arg)
   "Run 'cargo run' with `rustic-run-arguments'."
-  (interactive)
+  (interactive "P")
   (let ((default-directory (or rustic-compilation-directory default-directory)))
+    (setq rustic-run-arguments
+          (if arg
+              (read-from-minibuffer "cargo run arguments: "
+                                    rustic-run-arguments nil nil 'rustic-run-history)
+            rustic-run-arguments))
     (rustic-cargo-run-command rustic-run-arguments)))
 
 (defun rustic--get-run-arguments ()
