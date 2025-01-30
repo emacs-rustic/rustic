@@ -539,29 +539,29 @@ prefix `C-u`.
 
  Keybinding             | Command
 ------------------------|----------------------
- <kdb>C-c C-p</kdb> | rustic-popup
- <kdb>C-c C-c C-u</kdb> | rustic-compile
- <kdb>C-c C-c C-i</kdb> | rustic-recompile
- <kdb>C-c C-c C-o</kdb> | rustic-format-buffer
- <kdb>C-c C-c C-,</kdb> | rustic-docstring-dwim
- <kdb>C-c C-c C-b</kdb> | rustic-cargo-build
- <kdb>C-c C-c C-k</kdb> | rustic-cargo-check
- <kdb>C-c C-c C-r</kdb> | rustic-cargo-run
- <kdb>C-c C-c C-f</kdb> | rustic-cargo-fmt
- <kdb>C-c C-c C-t</kdb> | rustic-cargo-test
- <kdb>C-c C-c C-c</kdb> | rustic-cargo-current-test
- <kdb>C-c C-c C-l</kdb> | rustic-cargo-clippy
- <kdb>C-c C-c C-n</kdb> | rustic-cargo-outdated
- <kdb>C-c C-c n</kdb> | rustic-cargo-new
- <kdb>C-c C-c i</kdb> | rustic-cargo-init
- <kdb>C-c C-c b</kdb> | rustic-cargo-bench
- <kdb>C-c C-c d</kdb> | rustic-cargo-doc
- <kdb>C-c C-c c</kdb> | rustic-cargo-clean
- <kdb>C-c C-c k</kdb> | rustic-cargo-clippy
- <kdb>C-c C-c f</kdb> | rustic-cargo-clippy-fix
- <kdb>C-c C-c a</kdb> | rustic-cargo-add
- <kdb>C-c C-c r</kdb> | rustic-cargo-rm
- <kdb>C-c C-c u</kdb> | rustic-cargo-upgrade
+ <kbd>C-c C-p</kbd> | rustic-popup
+ <kbd>C-c C-c C-u</kbd> | rustic-compile
+ <kbd>C-c C-c C-i</kbd> | rustic-recompile
+ <kbd>C-c C-c C-o</kbd> | rustic-format-buffer
+ <kbd>C-c C-c C-,</kbd> | rustic-docstring-dwim
+ <kbd>C-c C-c C-b</kbd> | rustic-cargo-build
+ <kbd>C-c C-c C-k</kbd> | rustic-cargo-check
+ <kbd>C-c C-c C-r</kbd> | rustic-cargo-run
+ <kbd>C-c C-c C-f</kbd> | rustic-cargo-fmt
+ <kbd>C-c C-c C-t</kbd> | rustic-cargo-test
+ <kbd>C-c C-c C-c</kbd> | rustic-cargo-current-test
+ <kbd>C-c C-c C-l</kbd> | rustic-cargo-clippy
+ <kbd>C-c C-c C-n</kbd> | rustic-cargo-outdated
+ <kbd>C-c C-c n</kbd> | rustic-cargo-new
+ <kbd>C-c C-c i</kbd> | rustic-cargo-init
+ <kbd>C-c C-c b</kbd> | rustic-cargo-bench
+ <kbd>C-c C-c d</kbd> | rustic-cargo-doc
+ <kbd>C-c C-c c</kbd> | rustic-cargo-clean
+ <kbd>C-c C-c k</kbd> | rustic-cargo-clippy
+ <kbd>C-c C-c f</kbd> | rustic-cargo-clippy-fix
+ <kbd>C-c C-c a</kbd> | rustic-cargo-add
+ <kbd>C-c C-c r</kbd> | rustic-cargo-rm
+ <kbd>C-c C-c u</kbd> | rustic-cargo-upgrade
  
  More details on each command below
 
