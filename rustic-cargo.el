@@ -178,6 +178,7 @@ stored in this variable.")
     (set-keymap-parent map rustic-compilation-mode-map)
     (define-key map [remap recompile] 'rustic-cargo-test-rerun)
     (define-key map (kbd "C-c C-t") 'rustic-cargo-test-rerun-current)
+    (define-key map (kbd "t") 'rustic-cargo-test-rerun-current)
     map)
   "Local keymap for `rustic-cargo-test-mode' buffers.")
 
