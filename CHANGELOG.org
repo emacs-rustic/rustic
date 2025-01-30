@@ -7,6 +7,8 @@
 - Implement ~rustic-cargo-nextest-current-test~ for running test at a
   point using nextest.
 - Fixed an issue where workspaces were not resolved correctly over TRAMP.
+- Implement ~rustic-cargo-test-rerun-current~ for rerunning the
+  current test from the compile buffer.
 
 * 3.5
 
