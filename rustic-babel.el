@@ -323,13 +323,13 @@ directory DIR."
           (insert dependencies))))))
 
 (defun rustic-babel-ensure-main-wrap (body)
-  "Wrap BODY in a 'fn main' function call if none exists."
+  "Wrap BODY in a `fn main' function call if none exists."
   (if (string-match "^[ \t]*\\(pub \\)?\\(async \\)?[fn]+[ \t\n\r]*main[ \t]*(.*)" body)
       body
     (format "fn main() {\n%s\n}\n" body)))
 
 (defun rustic-babel-include-blocks (blocks)
-  "Insert contents of BLOCKS to the 'main block' that is being
+  "Insert contents of BLOCKS to the `main block' that is being
 executed with the parameter `:include'."
   (let ((contents ""))
     (with-current-buffer (current-buffer)
@@ -366,9 +366,9 @@ executed with the parameter `:include'."
 
 Only supports three cases:
 
-1. Simple value: A='a' -> &str
-2. Simple list: A=('a' 'b') -> &[&str]
-3. Nested list (org-table): A=(('a' 'b')) -> &[&[&str]]"
+1. Simple value: A=\\='a\\=' -> &str
+2. Simple list: A=(\\='a\\=' \\='b\\=') -> &[&str]
+3. Nested list (org-table): A=((\\='a\\=' \\='b\\=')) -> &[&[&str]]"
   (if (listp var)
       (if (listp (car var)) "&[&[&str]]" "&[&str]")
     "&str"))
@@ -394,9 +394,9 @@ to be homogenous."
 
 There are only 3 cases:
 
-1. Simple value: A='a' -> &str
-2. Simple list: A=('a' 'b') -> &[&str]
-2. Nested list (org-table): A=(('a' 'b')) -> &[&[&str]]"
+1. Simple value: A=\\='a\\=' -> &str
+2. Simple list: A=(\\='a\\=' \\='b\\=') -> &[&str]
+2. Nested list (org-table): A=((\\='a\\=' \\='b\\=')) -> &[&[&str]]"
   (string-join
    (mapcar
     (lambda (pair)
