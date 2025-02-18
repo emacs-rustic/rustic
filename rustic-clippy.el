@@ -12,7 +12,7 @@
   :type 'string
   :group 'rustic-cargo)
 
-(defcustom rustic-default-clippy-arguments "--benches --tests --all-features"
+(defcustom rustic-default-clippy-arguments "--all-targets --all-features"
   "Default arguments when running `clippy'."
   :type 'string
   :group 'rustic-cargo)
