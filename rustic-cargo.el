@@ -111,7 +111,7 @@ instead of applying the default arguments from `rustic-default-test-arguments'."
   :type 'boolean
   :group 'rustic-cargo)
 
-(defcustom rustic-default-test-arguments "--benches --tests --all-features"
+(defcustom rustic-default-test-arguments "--all-targets --all-features"
   "Default arguments when running `cargo test'."
   :type 'string
   :group 'rustic-cargo)
