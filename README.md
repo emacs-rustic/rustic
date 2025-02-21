@@ -531,40 +531,6 @@ to Cargo.toml by checking new diagnostics for 'unresolved import' errors
 - `rustic-cargo-use-last-stored-arguments` always use stored arguments that were provided with `C-u`(instead of requiring to run rustic "rerun" commands)
 - `rustic-cargo-populate-package-name` for auto populating the correct package name when used with universal argument. This comes in handy when you are working with multiple projects. Not enabled by default, but recommened to enable it.
 
-
-### Keybindings
-
-Note that most commands support editing the exact `cargo` arguments and flags when called with the
-prefix `C-u`.
-
- Keybinding             | Command
-------------------------|----------------------
- <kbd>C-c C-p</kbd> | rustic-popup
- <kbd>C-c C-c C-u</kbd> | rustic-compile
- <kbd>C-c C-c C-i</kbd> | rustic-recompile
- <kbd>C-c C-c C-o</kbd> | rustic-format-buffer
- <kbd>C-c C-c C-,</kbd> | rustic-docstring-dwim
- <kbd>C-c C-c C-b</kbd> | rustic-cargo-build
- <kbd>C-c C-c C-k</kbd> | rustic-cargo-check
- <kbd>C-c C-c C-r</kbd> | rustic-cargo-run
- <kbd>C-c C-c C-f</kbd> | rustic-cargo-fmt
- <kbd>C-c C-c C-t</kbd> | rustic-cargo-test
- <kbd>C-c C-c C-c</kbd> | rustic-cargo-current-test
- <kbd>C-c C-c C-l</kbd> | rustic-cargo-clippy
- <kbd>C-c C-c C-n</kbd> | rustic-cargo-outdated
- <kbd>C-c C-c n</kbd> | rustic-cargo-new
- <kbd>C-c C-c i</kbd> | rustic-cargo-init
- <kbd>C-c C-c b</kbd> | rustic-cargo-bench
- <kbd>C-c C-c d</kbd> | rustic-cargo-doc
- <kbd>C-c C-c c</kbd> | rustic-cargo-clean
- <kbd>C-c C-c k</kbd> | rustic-cargo-clippy
- <kbd>C-c C-c f</kbd> | rustic-cargo-clippy-fix
- <kbd>C-c C-c a</kbd> | rustic-cargo-add
- <kbd>C-c C-c r</kbd> | rustic-cargo-rm
- <kbd>C-c C-c u</kbd> | rustic-cargo-upgrade
- 
- More details on each command below
-
 ### Edit
 
 [cargo-edit](https://github.com/killercup/cargo-edit) provides commands to edit
@@ -585,15 +551,15 @@ If you want to disable warnings when running cargo-test commands, you can set
 
 Commands:
 
-- `rustic-cargo-test` run 'cargo test', when called with `C-u` edit the command
-  before running and store in `rustic-test-arguments`.
-- `rustic-cargo-test-rerun` (`g` from compile buffer) rerun 'cargo test' with arguments stored in
-  `rustic-test-arguments`
-- `rustic-cargo-current-test` run test at point, whether it's a function or a module
-- `rustic-cargo-test-rerun-current` (`C-c C-t` or `t` from compile buffer) re-run the test at point
-  from the `*cargo-test*` compile buffer.
+- `rustic-cargo-test` run 'cargo test', when called with `C-u` store
+  arguments in `rustic-test-arguments`
+- `rustic-cargo-test-rerun` rerun 'cargo test' with arguments stored
+  in `rustic-test-arguments`
+- `rustic-cargo-current-test` run test at point, whether it's a
+  function or a module
 - `rustic-cargo-run-nextest` command for running [nextest](https://github.com/nextest-rs/nextest)
-- `rustic-cargo-nextest-current-test` is the nextest equivalent for `rustic-cargo-current-test`
+- `rustic-cargo-nextest-current-test` is the nextest equivalent for
+  `rustic-cargo-current-test`
 
 ![](https://raw.githubusercontent.com/emacs-rustic/rustic/main/img/cargo_current_test.png)
 
