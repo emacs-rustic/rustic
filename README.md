@@ -648,7 +648,7 @@ some toolchains when clippy isn't installed.  If you have problems try
 it with `rustup component add --toolchain nightly clippy`.
 
 You can change the parameters `rustic-default-clippy-arguments` that
-default to "--benches --tests --all-features".
+default to "--all-targets --all-features".
 
 ### auto-fixing before compilation
 

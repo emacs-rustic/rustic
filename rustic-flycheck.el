@@ -21,8 +21,8 @@
 
 (defun rustic-flycheck-dirs-list (start end)
   "Return a list of directories from START (inclusive) to END (exclusive).
-E.g., if START is '/a/b/c/d' and END is '/a', return the list
-'(/a/b/c/d /a/b/c /a/b) in this order.
+E.g., if START is `/a/b/c/d' and END is `/a', return the list
+\\='(/a/b/c/d /a/b/c /a/b) in this order.
 START and END are strings representing file paths.  END should be
 above START in the file hierarchy; if not, the list stops at the
 root of the file hierarchy."
