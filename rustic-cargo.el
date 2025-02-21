@@ -241,7 +241,31 @@ If ARG is not nil, use value as argument and store it in
   "Run `cargo test' with `rustic-test-arguments'."
   (interactive "P")
   (let ((default-directory (or rustic-compilation-directory default-directory)))
+    (setq rustic-test-arguments
+          (if arg
+              (read-from-minibuffer "Cargo test arguments: " rustic-test-arguments nil nil 'rustic-test-history)
+            rustic-test-arguments))
     (rustic-cargo-test-run rustic-test-arguments)))
+
+(defun rustic-cargo-test-rerun-current (arg)
+  "Rerun the test at point from `rustic-cargo-test-mode'."
+  (interactive "P")
+  (let* ((default-directory (or rustic-compilation-directory default-directory))
+        (test (rustic-cargo--get-test-at-point))
+        (command (if test
+                     (concat "-- --exact " test)
+                   (error "No test found at point"))))
+    (setq rustic-test-arguments
+          (if arg
+              (read-from-minibuffer "Cargo test arguments: " command nil nil 'rustic-test-history)
+            command))
+    (rustic-cargo-test-run rustic-test-arguments)))
+
+(defun rustic-cargo--get-test-at-point ()
+  (save-excursion
+      (beginning-of-line)
+      (when (re-search-forward "^test \\([^ ]+\\) ..." (line-end-position) t)
+        (buffer-substring-no-properties (match-beginning 1) (match-end 1)))))
 
 ;;;###autoload
 (defun rustic-cargo-current-test ()
