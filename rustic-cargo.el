@@ -29,8 +29,14 @@
   :type 'string
   :group 'rustic-cargo)
 
-(defcustom rustic-cargo-nextest-exec-command "nextest run"
-  "Execute command to run `nextest'."
+(defcustom rustic-cargo-test-runner 'cargo
+  "Test runner to use for running tests.  By default uses cargo."
+  :type '(choice (const cargo)
+                 (const nextest))
+  :group 'rustic-cargo)
+
+(defcustom rustic-cargo-nextest-exec-command (list "nextest" "run")
+  "Execute command to run nextest."
   :type 'string
   :group 'rustic-cargo)
 
@@ -188,37 +194,18 @@ stored in this variable.")
   (when rustic-cargo-test-disable-warnings
     (setq-local rustic-compile-rustflags (concat rustic-compile-rustflags " -Awarnings"))))
 
-(defun rustic-cargo-run-nextest (&optional arg)
-  "Command for running nextest.
-
-If ARG is not nil, get input from minibuffer."
-  (interactive "P")
-  (let* ((nextest (if arg
-                      (read-from-minibuffer "nextest command: " rustic-cargo-nextest-exec-command)
-                    rustic-cargo-nextest-exec-command))
-         (c (-flatten (list (rustic-cargo-bin) (split-string nextest))))
-         (buf rustic-test-buffer-name)
-         (proc rustic-test-process-name)
-         (mode 'rustic-cargo-test-mode))
-    (rustic-compilation c (list :buffer buf :process proc :mode mode))))
-
-(defun rustic-cargo-nextest-current-test ()
-  "Run `cargo nextest run' for the test near point."
-  (interactive)
-  (rustic-compilation-process-live)
-  (-if-let (test-to-run (setq rustic-test-arguments
-                              (rustic-cargo--get-test-target)))
-      (let ((rustic-cargo-nextest-exec-command
-             (format "%s %s" rustic-cargo-nextest-exec-command test-to-run)))
-        (rustic-cargo-run-nextest))
-    (message "Could not find test at point.")))
+(defun rustic--cargo-test-runner ()
+  "Return the test runner command."
+  (cond ((eq rustic-cargo-test-runner 'cargo) rustic-cargo-test-exec-command)
+        ((eq rustic-cargo-test-runner 'nextest) rustic-cargo-nextest-exec-command)
+        (t (user-error "Invalid configured value for rustic-cargo-test-runner variable"))))
 
 ;;;###autoload
 (defun rustic-cargo-test-run (&optional test-args)
   "Start compilation process for `cargo test' with optional TEST-ARGS."
   (interactive)
   (rustic-compilation-process-live)
-  (let* ((command (list (rustic-cargo-bin) rustic-cargo-test-exec-command))
+  (let* ((command (flatten-list (list (rustic-cargo-bin) (rustic--cargo-test-runner))))
          (c (append command (split-string (if test-args test-args ""))))
          (buf rustic-test-buffer-name)
          (proc rustic-test-process-name)
@@ -297,7 +284,7 @@ If ARG is not nil, use value as argument and store it in
 
 (defun rustic-cargo-run-test (test)
   "Run TEST which can be a single test or mod name."
-  (let* ((c (list (rustic-cargo-bin) rustic-cargo-test-exec-command test))
+  (let* ((c (flatten-list (list (rustic-cargo-bin) (rustic--cargo-test-runner) test)))
          (buf rustic-test-buffer-name)
          (proc rustic-test-process-name)
          (mode 'rustic-cargo-test-mode))

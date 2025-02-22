@@ -9,6 +9,7 @@
 - Fixed an issue where workspaces were not resolved correctly over TRAMP.
 - Implement ~rustic-cargo-test-rerun-current~ for rerunning the
   current test from the compile buffer.
+- Provde integration with [[https://nexte.st/][cargo nextest]]
 
 * 3.5
 
