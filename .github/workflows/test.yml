@@ -22,7 +22,6 @@ jobs:
           #- macos-latest
           #- windows-latest
         emacs-version:
-          - 27.2
           - 28.2
           - 29.4
           - 30.1
