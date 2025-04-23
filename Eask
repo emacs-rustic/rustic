@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "rustic"
          "3.5"
          "Rust development environment")
