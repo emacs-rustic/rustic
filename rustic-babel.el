@@ -45,7 +45,7 @@ results block ? By default we display it as separate popup."
 When passing a toolchain to a block as argument, this variable won't be
 considered."
   :type '(choice (string :tag "String")
-                 (const :tag "Nil" nil))
+          (const :tag "Nil" nil))
   :group 'rustic-babel)
 
 (defvar rustic-babel-buffer-name '((:default . "*rust-babel*")))
@@ -146,17 +146,17 @@ execution with rustfmt."
          (rustic-babel-build-update-result-block result))
        (rustic-with-spinner rustic-babel-spinner nil nil)
        (if rustic-babel-display-error-popup
-         (if (= (length (with-current-buffer proc-buffer (buffer-string))) 0)
-             (kill-buffer proc-buffer)
-           (pop-to-buffer proc-buffer))
+           (if (= (length (with-current-buffer proc-buffer (buffer-string))) 0)
+               (kill-buffer proc-buffer)
+             (pop-to-buffer proc-buffer))
          (if (> (length (with-current-buffer proc-buffer (buffer-string))) 0)
              (progn
                (with-current-buffer proc-buffer
-                  (save-excursion
-                    (save-match-data
-                      (goto-char (point-min))
-                      (setq result (buffer-string))
-                      (rustic-babel-run-update-result-block result))))
+                 (save-excursion
+                   (save-match-data
+                     (goto-char (point-min))
+                     (setq result (buffer-string))
+                     (rustic-babel-run-update-result-block result))))
                (kill-buffer proc-buffer))
            (kill-buffer proc-buffer)))))))
 
@@ -342,9 +342,20 @@ executed with the parameter `:include'."
 (defun rustic-babel-block-contents (block-name)
   "Return contents of block with the name BLOCK-NAME"
   (with-current-buffer (current-buffer)
-    (save-excursion
-      (org-babel-goto-named-src-block block-name)
-      (org-element-property :value (org-element-at-point)))))
+    (cond
+     ;; Block exists in current file
+     ((org-babel-find-named-block block-name)
+      (save-excursion
+        (org-babel-goto-named-src-block block-name)
+        (org-element-property :value (org-element-at-point))))
+     ;; Block exists in library of babel
+     ;; (see https://orgmode.org/manual/Library-of-Babel.html)
+     ((nth 2 (assoc-string block-name org-babel-library-of-babel)))
+     ;; Fallback
+     (t
+      (progn
+        (message "included source code block `%s' not found in this buffer or the library of babel" block-name)
+        nil)))))
 
 (defun rustic-babel-insert-mod (mods)
   "Build string with module declarations for MODS and return it."
