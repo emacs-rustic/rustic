@@ -6,3 +6,4 @@
 *autoloads.el
 test/test-project/target
 test/test-project-single-crate/target
+.env
