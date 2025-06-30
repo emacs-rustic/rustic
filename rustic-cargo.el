@@ -37,7 +37,7 @@
 
 (defcustom rustic-cargo-nextest-exec-command (list "nextest" "run")
   "Execute command to run nextest."
-  :type 'string
+  :type '(repeat string)
   :group 'rustic-cargo)
 
 (defcustom rustic-cargo-run-exec-command "run"
