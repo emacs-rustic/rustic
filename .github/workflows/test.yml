@@ -27,7 +27,7 @@ jobs:
           - 30.1
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: taiki-e/install-action@v2
         with:
