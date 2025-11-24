@@ -134,7 +134,7 @@ with `lsp-rust-switch-server'."
     (if (or (null rustic-enable-detached-file-support)
             (null buffer-file-name)
             (rustic-buffer-crate t))
-        eglot--{}
+        (cl-call-next-method)
       (list :detachedFiles
             (vector (file-local-name (file-truename buffer-file-name))))))
 
