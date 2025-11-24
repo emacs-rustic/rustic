@@ -123,7 +123,13 @@ with `lsp-rust-switch-server'."
                                      (when (symbolp (car mode))
                                        (eq (car mode) 'rust-mode)))
                                    eglot-server-programs)))))
-    (add-to-list 'eglot-server-programs `((rustic-mode :language-id "rust") . (eglot-rust-analyzer . ,rustic-analyzer-command)))))
+    (add-to-list 'eglot-server-programs
+                 (append '((rustic-mode :language-id "rust")
+                            eglot-rust-analyzer)
+                          rustic-analyzer-command
+                          (:initializationOptions
+                           (lambda (_)
+   				             (plist-get eglot-workspace-configuration :rust-analyzer)))))))
 
 (with-eval-after-load 'eglot
   (defclass eglot-rust-analyzer (eglot-lsp-server) ()
