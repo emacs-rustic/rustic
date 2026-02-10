@@ -562,7 +562,7 @@ prefix `C-u`.
  <kbd>C-c C-c a</kbd> | rustic-cargo-add
  <kbd>C-c C-c r</kbd> | rustic-cargo-rm
  <kbd>C-c C-c u</kbd> | rustic-cargo-upgrade
- 
+
  More details on each command below
 
 ### Edit
@@ -674,6 +674,7 @@ grammar mistakes.
 - `rustic-cargo-lints` called with `rustic-lints-arguments`
 - `rustic-cargo-install` run 'cargo install' on the current package.
 - `rustic-cargo-update` run `cargo update` on the current package.
+- `rustic-cargo-custom-command` run `cargo` with custom sub commands.
 
 ## Clippy
 

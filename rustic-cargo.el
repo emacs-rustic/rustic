@@ -775,6 +775,43 @@ in your project like `pwd'"
                               ,@(split-string rustic-cargo-build-arguments))
                             (list :clippy-fix t)))
 
+(defvar rustic-cargo-custom-command--project-commands (make-hash-table :test 'equal)
+  "Project-level arguments for `rustic-cargo-custom-command'.")
+
+(defun rustic-cargo-custom-command-rerun (&optional arg)
+  "Rerun the custom `cargo' command.
+When called with a prefix argument (C-u), prompt for a new command."
+  (interactive "P")
+  (let ((default-directory (or rustic-compilation-directory default-directory)))
+    (rustic-cargo-custom-command arg)))
+
+(defvar rustic-cargo-custom-command-mode-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map rustic-compilation-mode-map)
+    (define-key map [remap recompile] 'rustic-cargo-custom-command-rerun)
+    map)
+  "Local keymap for `rustic-cargo-custom-command-mode' buffers.")
+
+(define-derived-mode rustic-cargo-custom-command-mode rustic-compilation-mode "cargo-custom"
+  :group 'rustic)
+
+;;;###autoload
+(defun rustic-cargo-custom-command (&optional arg)
+  "Run a custom `cargo' command for the current project.
+The command is stored on a per-project basis.
+When called with a prefix argument (C-u), prompt for a new command."
+  (interactive "P")
+  (let* ((project-root (rustic-buffer-crate))
+         (command (gethash project-root rustic-cargo-custom-command--project-commands "")))
+    (when (or arg (s-blank? command))
+      (setq command
+            (read-string "Cargo subcommand and arguments: " command))
+      (puthash project-root command rustic-cargo-custom-command--project-commands))
+    (rustic-run-cargo-command `(,(rustic-cargo-bin)
+                                ,@(split-string command))
+                              (list :clippy-fix t
+                                    :mode 'rustic-cargo-custom-command-mode))))
+
 (defvar rustic-clean-arguments nil
   "Holds arguments for `cargo clean', similar to `compilation-arguments`.")
 
