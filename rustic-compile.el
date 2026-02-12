@@ -136,7 +136,7 @@
   "Create hyperlink in compilation buffers for rust errors.")
 
 (defvar rustic-compilation-warning
-  (let ((warning "^warning:[^\n]*\n\s*-->\s")
+  (let ((warning "^warning[^:]*:[^\n]*\n\s*-->\s")
         (file "\\([^\n]+\\)")
         (start-line "\\([0-9]+\\)")
         (start-col  "\\([0-9]+\\)"))
