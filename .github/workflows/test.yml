@@ -31,7 +31,7 @@ jobs:
 
       - uses: taiki-e/install-action@v2
         with:
-          tool: just@1.16.0
+          tool: just@1.43.1
 
       - uses: jcs090218/setup-emacs@master
         with:
@@ -48,7 +48,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.80.1
+          toolchain: 1.86.0
           components: clippy, rustfmt
 
       - name: Run tests

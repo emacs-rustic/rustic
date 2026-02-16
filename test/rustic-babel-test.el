@@ -188,10 +188,10 @@
                   extern crate serde;
                   extern crate serde_json;
                   fn main() {
-                      let _rng = rand::thread_rng();
+                      let _rng = rand::rng();
                   }")
          ;; also test with strings for crate and version
-         (params ":crates '(rand (serde . *) (\"serde_json\" . \"*\"))")
+         (params ":crates '(rand (serde . *) (serde_json . *))")
          (buf (rustic-test-get-babel-block string params)))
     (with-current-buffer buf
       (rustic-test-babel-execute-block buf)
