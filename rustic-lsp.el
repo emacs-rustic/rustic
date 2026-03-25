@@ -55,6 +55,11 @@ in, e.g. your home directory."
   :type 'boolean
   :group 'rustic)
 
+(defcustom rustic-lsp-check-command "check"
+  "Command for computing diagnostics on save."
+  :type 'string
+  :group 'rustic)
+
 ;;; Common
 
 (defun rustic-setup-lsp ()
@@ -74,6 +79,7 @@ in, e.g. your home directory."
 
 (defvar lsp-rust-analyzer-macro-expansion-method)
 (defvar lsp-rust-analyzer-server-command)
+(defvar lsp-rust-analyzer-cargo-watch-command)
 (defvar lsp-rust-server)
 (declare-function lsp "lsp-mode" (&optional arg))
 (declare-function lsp-rust-switch-server "lsp-rust" (lsp-server))
@@ -89,6 +95,7 @@ with `lsp-rust-switch-server'."
   ;; (lsp-workspace-folders-add (rustic-buffer-workspace))
   (setq lsp-rust-server rustic-lsp-server)
   (setq lsp-rust-analyzer-server-command rustic-analyzer-command)
+  (setq lsp-rust-analyzer-cargo-watch-command rustic-lsp-check-command)
   (lsp-rust-switch-server rustic-lsp-server))
 
 (defun rustic-install-lsp-client-p (lsp-client)
@@ -129,14 +136,19 @@ with `lsp-rust-switch-server'."
   (defclass eglot-rust-analyzer (eglot-lsp-server) ()
     :documentation "Rust-analyzer LSP server.")
 
-  (cl-defmethod eglot-initialization-options ((server eglot-rust-analyzer))
-    "Pass `detachedFiles' when `rustic-enable-detached-file-support' is non-`nil'."
-    (if (or (null rustic-enable-detached-file-support)
-            (null buffer-file-name)
-            (rustic-buffer-crate t))
-        eglot--{}
-      (list :detachedFiles
-            (vector (file-local-name (file-truename buffer-file-name))))))
+  (cl-defmethod eglot-initialization-options ((_server eglot-rust-analyzer))
+    "Pass `detachedFiles' when `rustic-enable-detached-file-support' is non-`nil'.
+
+Also pass the value `rustic-lsp-check-command' as the check.command
+option."
+    (append
+     (and rustic-enable-detached-file-support
+          buffer-file-name
+          (null (rustic-buffer-crate t))
+          (list :detachedFiles
+                (vector (file-local-name (file-truename buffer-file-name)))))
+     (list :check
+           (list :command rustic-lsp-check-command))))
 
   (rustic-setup-eglot))
 
