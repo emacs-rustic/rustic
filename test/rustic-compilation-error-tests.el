@@ -239,4 +239,10 @@
           (should (string= default-directory test-workspace))
           (should-not (get-text-property (point) 'compilation-message)))))))
 
+(ert-deftest rustic-compilation-panic-regex ()
+  (let* ((cases '("thread 'crate::module::submodule::tests::test' (294268) panicked at lib/rs/mylib/src/module.rs:1282:76:"
+                  "thread 'crate::module::submodule::tests::test' panicked at lib/rs/mylib/src/module.rs:1282:76:")))
+    (dolist (s cases)
+      (should (string-match (car rustic-compilation-panic) s)))))
+
 (provide 'rustic-compilation-error-tests)
