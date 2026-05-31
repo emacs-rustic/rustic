@@ -649,7 +649,7 @@ If BIN is not nil, create a binary application, otherwise a library."
 
 ;;;###autoload
 (defun rustic-cargo-init (project-path &optional bin)
-  "Run `cargo init' to initialize a directory in the path specified by PROJECT-PATH.
+  "Run `cargo init' to initialize a directory in PROJECT-PATH.
 If BIN is not nil, create a binary application, otherwise a library."
   (interactive "DProject path: ")
   (rustic-create-project project-path nil bin))
@@ -819,9 +819,9 @@ When called with a prefix argument (C-u), prompt for a new command."
 (defun rustic-cargo-clean (&optional arg)
   "Run `cargo clean' for the current project.
 
-If ARG is not nil, use value as argument and store it in `rustic-clean-arguments'.
-When calling this function from `rustic-popup-mode', always use the value of
-`rustic-clean-arguments'."
+If ARG is not nil, use value as argument and store it in
+`rustic-clean-arguments'.  When calling this function from
+`rustic-popup-mode', always use the value of `rustic-clean-arguments'."
   (interactive "P")
   (rustic-run-cargo-command
    (-filter (lambda (s) (s-present? s))
@@ -991,7 +991,7 @@ If running with prefix command `C-u', read whole command from minibuffer."
 
 ;;;###autoload
 (defun rustic-cargo-upgrade (&optional arg)
-  "Upgrade dependencies as specified in the local manifest file using `cargo upgrade'.
+  "Upgrade dependencies in the local manifest file using `cargo upgrade'.
 If running with prefix command `C-u', read whole command from minibuffer."
   (interactive "P")
   (let* ((command (if arg
