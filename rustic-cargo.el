@@ -742,8 +742,8 @@ When calling this function from `rustic-popup-mode', always use the value of
       nil)))
 
 ;;;###autoload
-(defun rustic-run-shell-command (&optional arg)
-  "Run an arbitrary shell command using ARG for the current project.
+(defun rustic-run-shell-command (&optional _arg)
+  "Run an arbitrary shell command for the current project.
 Example: use it to provide an environment variable to your
 application like this `env MYVAR=1 cargo run' so that it can read
 it at the runtime.  As a byproduct, you can run any shell command
@@ -887,7 +887,7 @@ If running with prefix command `C-u', read whole command from minibuffer."
                     (concat base (read-from-minibuffer "Crate: ")))))
     (rustic-run-cargo-command command)))
 
-(defun rustic-cargo-add-missing-dependencies (&optional arg)
+(defun rustic-cargo-add-missing-dependencies (&optional _arg)
   "Lookup and add missing dependencies to Cargo.toml.
 Adds all missing crates by default with latest version using lsp functionality.
 Supports both lsp-mode and egot.
@@ -911,7 +911,7 @@ them to Cargo.toml."
      (append (list :buffer rustic-cargo-dependencies
                    :no-default-dir t
                    :no-display t
-                   :sentinel (lambda (proc msg) ()))))))
+                   :sentinel (lambda (_proc _msg) ()))))))
 
 (defun rustic-cargo-find-missing-dependencies ()
   "Return missing dependencies using either lsp-mode or eglot/flymake
