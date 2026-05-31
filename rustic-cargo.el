@@ -891,7 +891,7 @@ If running with prefix command `C-u', read whole command from minibuffer."
   "Lookup and add missing dependencies to Cargo.toml.
 Adds all missing crates by default with latest version using lsp functionality.
 Supports both lsp-mode and egot.
-Use with 'C-u` to open prompt with missing crates."
+Use with \\='C-u' to open prompt with missing crates."
   (interactive)
   (-if-let (deps (rustic-cargo-find-missing-dependencies))
       (progn
