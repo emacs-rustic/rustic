@@ -2,7 +2,7 @@
 
 LUA_FILTER="$HOME/.local/bin/rustic-doc-filter.lua"
 function get_toolchain {
-    rustup show | sed -nr 's/(.*) \(default\)/\1/p' | head -n 1
+    rustup show active-toolchain | awk '{print $1}'
 }
 
 if [ "$1" = "" ] || [ "$1" = "--help"  ]; then
