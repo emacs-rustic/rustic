@@ -226,12 +226,12 @@ fn test2() {
         (while (eq (process-status proc) 'run)
           (sit-for 0.1))
         (should (string= rustic-test-arguments "tests::test1"))
-      (with-current-buffer proc-buf
-        (should (string-match "test1" (buffer-substring-no-properties (point-min) (point-max))))
-        (should-not (string-match "test2" (buffer-substring-no-properties (point-min) (point-max)))))
-      (kill-buffer proc-buf)))
-  (setq rustic-test-arguments "")
-  (kill-buffer buf)))
+        (with-current-buffer proc-buf
+          (should (string-match "test1" (buffer-substring-no-properties (point-min) (point-max))))
+          (should-not (string-match "test2" (buffer-substring-no-properties (point-min) (point-max)))))
+        (kill-buffer proc-buf)))
+    (setq rustic-test-arguments "")
+    (kill-buffer buf)))
 
 (ert-deftest rustic-test-cargo-run-test-with-mod ()
   (let* ((string "
@@ -276,8 +276,8 @@ fn test21() {
           (sit-for 0.01))
 
         (should (string= (s-join " " (process-get proc 'command))
-                             (concat (rustic-cargo-bin) " build "
-                                     rustic-cargo-build-arguments)))))))
+                         (concat (rustic-cargo-bin) " build "
+                                 rustic-cargo-build-arguments)))))))
 
 (ert-deftest rustic-test-check ()
   (let* ((string "fn main() { let s = 1;}")
@@ -291,8 +291,8 @@ fn test21() {
           (sit-for 0.01))
 
         (should (string= (s-join " " (process-get proc 'command))
-                             (concat (rustic-cargo-bin) " check "
-                                     rustic-cargo-check-arguments)))
+                         (concat (rustic-cargo-bin) " check "
+                                 rustic-cargo-check-arguments)))
 
         (with-current-buffer buffer
           (should (string-match "^warning:\s" (buffer-substring-no-properties (point-min) (point-max)))))))))
@@ -314,7 +314,7 @@ fn test() {
           (should (eq major-mode 'rustic-cargo-test-mode)))
         (should (string= (s-join " " (process-get proc 'command))
                          (s-trim (concat (rustic-cargo-bin) " test "
-                                    rustic-default-test-arguments))))))))
+                                         rustic-default-test-arguments))))))))
 
 (ert-deftest rustic-cargo-expand-test ()
   (let* ((string "fn main() {()}")
