@@ -22,7 +22,6 @@ jobs:
           #- macos-latest
           #- windows-latest
         emacs-version:
-          - 28.2
           - 29.4
           - 30.2
 
@@ -31,7 +30,7 @@ jobs:
 
       - uses: taiki-e/install-action@v2
         with:
-          tool: just@1.43.1
+          tool: just@1.51.0
 
       - uses: jcs090218/setup-emacs@master
         with:
