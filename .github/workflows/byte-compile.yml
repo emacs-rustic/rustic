@@ -1,0 +1,54 @@
+name: Byte-compile
+
+on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  byte-compile:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        emacs-version:
+          - 28.2
+          - 30.1
+          - snapshot
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs-version }}
+
+      - name: Install dependencies
+        run: |
+          emacs --batch \
+            --eval "(require 'package)" \
+            --eval "(add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\") t)" \
+            --eval "(package-initialize)" \
+            --eval "(package-refresh-contents)" \
+            --eval "(dolist (p '(rust-mode dash f s markdown-mode spinner xterm-color flycheck inheritenv polymode)) (unless (package-installed-p p) (package-install p)))"
+
+      - name: Byte-compile and load
+        run: |
+          emacs --batch \
+            --eval "(require 'package)" \
+            --eval "(add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\") t)" \
+            --eval "(package-initialize)" \
+            -L . \
+            -f batch-byte-compile \
+            rustic.el rustic-babel.el rustic-cargo.el rustic-clippy.el \
+            rustic-comint.el rustic-compile.el rustic-doc.el \
+            rustic-expand.el rustic-flycheck.el rustic-interaction.el \
+            rustic-lsp.el rustic-playground.el rustic-popup.el \
+            rustic-rustfix.el rustic-rustfmt.el rustic-spellcheck.el
+          emacs --batch \
+            --eval "(require 'package)" \
+            --eval "(add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\") t)" \
+            --eval "(package-initialize)" \
+            -L . \
+            --eval "(require 'rustic)"
