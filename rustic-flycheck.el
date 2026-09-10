@@ -10,12 +10,14 @@
 (require 'rustic)
 
 (defcustom rustic-flycheck-clippy-params-stable "--message-format=json"
-  "Parameters for the flycheck clippy checker `rustic-clippy' when active toolchain is stable."
+  "Parameters for the flycheck clippy checker `rustic-clippy'.
+Used when the active toolchain is stable."
   :type 'string
   :group 'rustic-flycheck)
 
 (defcustom rustic-flycheck-clippy-params-nightly "--message-format=json -Zunstable-options"
-  "Parameters for the flycheck clippy checker `rustic-clippy' when active toolchain is nightly."
+  "Parameters for the flycheck clippy checker `rustic-clippy'.
+Used when the active toolchain is nightly."
   :type 'string
   :group 'rustic-flycheck)
 

@@ -294,8 +294,8 @@ If ARG is not nil, use value as argument and store it in
 (defun rustic-cargo-test-dwim ()
   "Run test or mod at point. Otherwise run `rustic-cargo-test'."
   (interactive)
-  (if-let (test (or (rustic-cargo--get-current-fn-name)
-                    (rustic-cargo--get-current-mod)))
+  (if-let* ((test (or (rustic-cargo--get-current-fn-name)
+                      (rustic-cargo--get-current-mod))))
       (rustic-cargo-test)))
 
 (defconst rustic-cargo-mod-regexp
@@ -320,14 +320,14 @@ If ARG is not nil, use value as argument and store it in
   (save-excursion
     (progn
       (goto-char (line-end-position))
-      (when-let ((location (search-backward-regexp rustic-cargo-mod-regexp nil t)))
+      (when-let* ((location (search-backward-regexp rustic-cargo-mod-regexp nil t)))
         (cons location (match-string 1))))))
 
 (defun rustic-cargo--get-current-line-fn-name ()
   "Return cons with location and fn name from the current line or nil."
   (save-excursion
     (goto-char (line-beginning-position))
-    (when-let ((location (search-forward-regexp rustic-cargo-fn-regexp (line-end-position) t)))
+    (when-let* ((location (search-forward-regexp rustic-cargo-fn-regexp (line-end-position) t)))
       (cons location (match-string 1)))))
 
 (defun rustic-cargo--get-current-fn-name ()
@@ -649,7 +649,7 @@ If BIN is not nil, create a binary application, otherwise a library."
 
 ;;;###autoload
 (defun rustic-cargo-init (project-path &optional bin)
-  "Run `cargo init' to initialize a directory in the path specified by PROJECT-PATH.
+  "Run `cargo init' to initialize a directory in PROJECT-PATH.
 If BIN is not nil, create a binary application, otherwise a library."
   (interactive "DProject path: ")
   (rustic-create-project project-path nil bin))
@@ -742,8 +742,8 @@ When calling this function from `rustic-popup-mode', always use the value of
       nil)))
 
 ;;;###autoload
-(defun rustic-run-shell-command (&optional arg)
-  "Run an arbitrary shell command using ARG for the current project.
+(defun rustic-run-shell-command (&optional _arg)
+  "Run an arbitrary shell command for the current project.
 Example: use it to provide an environment variable to your
 application like this `env MYVAR=1 cargo run' so that it can read
 it at the runtime.  As a byproduct, you can run any shell command
@@ -819,9 +819,9 @@ When called with a prefix argument (C-u), prompt for a new command."
 (defun rustic-cargo-clean (&optional arg)
   "Run `cargo clean' for the current project.
 
-If ARG is not nil, use value as argument and store it in `rustic-clean-arguments'.
-When calling this function from `rustic-popup-mode', always use the value of
-`rustic-clean-arguments'."
+If ARG is not nil, use value as argument and store it in
+`rustic-clean-arguments'.  When calling this function from
+`rustic-popup-mode', always use the value of `rustic-clean-arguments'."
   (interactive "P")
   (rustic-run-cargo-command
    (-filter (lambda (s) (s-present? s))
@@ -887,11 +887,11 @@ If running with prefix command `C-u', read whole command from minibuffer."
                     (concat base (read-from-minibuffer "Crate: ")))))
     (rustic-run-cargo-command command)))
 
-(defun rustic-cargo-add-missing-dependencies (&optional arg)
+(defun rustic-cargo-add-missing-dependencies (&optional _arg)
   "Lookup and add missing dependencies to Cargo.toml.
 Adds all missing crates by default with latest version using lsp functionality.
 Supports both lsp-mode and egot.
-Use with 'C-u` to open prompt with missing crates."
+Use with \\='C-u' to open prompt with missing crates."
   (interactive)
   (-if-let (deps (rustic-cargo-find-missing-dependencies))
       (progn
@@ -911,7 +911,7 @@ them to Cargo.toml."
      (append (list :buffer rustic-cargo-dependencies
                    :no-default-dir t
                    :no-display t
-                   :sentinel (lambda (proc msg) ()))))))
+                   :sentinel (lambda (_proc _msg) ()))))))
 
 (defun rustic-cargo-find-missing-dependencies ()
   "Return missing dependencies using either lsp-mode or eglot/flymake
@@ -991,7 +991,7 @@ If running with prefix command `C-u', read whole command from minibuffer."
 
 ;;;###autoload
 (defun rustic-cargo-upgrade (&optional arg)
-  "Upgrade dependencies as specified in the local manifest file using `cargo upgrade'.
+  "Upgrade dependencies in the local manifest file using `cargo upgrade'.
 If running with prefix command `C-u', read whole command from minibuffer."
   (interactive "P")
   (let* ((command (if arg

@@ -74,9 +74,9 @@
 (defun rustic-cargo-clippy (&optional arg)
   "Run `cargo clippy'.
 
-If ARG is not nil, use value as argument and store it in `rustic-clippy-arguments'.
-When calling this function from `rustic-popup-mode', always use the value of
-`rustic-clippy-arguments'."
+If ARG is not nil, use value as argument and store it in
+`rustic-clippy-arguments'.  When calling this function from
+`rustic-popup-mode', always use the value of `rustic-clippy-arguments'."
   (interactive "P")
   (rustic-cargo-clippy-run
    :params (cond (arg
@@ -110,7 +110,7 @@ When calling this function from `rustic-popup-mode', always use the value of
                    rustic-default-clippy-arguments)
    :no-save (plist-get args :no-save)
    :silent t
-   :sentinel (lambda (proc msg)
+   :sentinel (lambda (proc _msg)
                (while (eq (process-status proc) 'run)
                  (sit-for 0.1))
                (if (zerop (process-exit-status proc))
